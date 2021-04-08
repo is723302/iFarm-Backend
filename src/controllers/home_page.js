@@ -1,3 +1,3 @@
 exports.renderHomePage = (req, res) => {
-  res.end('Home Page');
+  res.end('iFarm Backend');
 }
