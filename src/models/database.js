@@ -28,6 +28,11 @@ class Database {
         return collection.find(filters).toArray(cb);
     }
 
+    findOne(id, cb){
+        const collection = db.collection(this.collectionName);
+        return collection.find(id).toArray(cb);
+    }
+
     insert(object){
         const collection = db.collection(this.collectionName);
         return collection.insertOne(object).then((result) => {
