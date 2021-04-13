@@ -15,3 +15,19 @@ exports.getSupervisor = (req, res) => {
         res.send(results[0]);
     });
 }
+
+exports.getSupervisorByEmail = (req, res) => {
+    console.log(req.params.email);
+    supervisor.findOne({"email":req.params.email}, (err, results) => {
+        console.log(results)
+        res.send(results[0]);
+    });
+}
+
+exports.postRegister = (req, res) => {
+    console.log(req.params.email);
+    supervisor.findOne({"email":req.params.email}, (err, results) => {
+        console.log(results)
+        res.send(results[0]);
+    });
+}
