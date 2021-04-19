@@ -33,9 +33,10 @@ function greenhouseApi(app) {
     router.get(
         '/',
         async function (req, res, next) {
-            const { filters } = req.query;
+            // const { name } = req.query;
+            console.log(JSON.stringify(req.query));
             try {
-                const greenhouses = await greenhouseController.getGreenhouses(filters);
+                const greenhouses = await greenhouseController.getGreenhouses(req.query);
                 res.status(200).json({
                     data: greenhouses,
                     message: 'greenhouses listed'
