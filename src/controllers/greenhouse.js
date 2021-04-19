@@ -1,17 +1,34 @@
-const greenhouse = require("../models/greenhouse");
-var ObjectId = require('mongodb').ObjectId;
+const greenhouseModel = require("../models/greenhouse");
 
-exports.getGreenhouses = (req, res) => {
-    greenhouse.find({}, (err, results) => {
-        console.log(results)
-        res.send(results);
-    });
+class GreenhouseController {
+    async createGreenhouse({ greenhouse }) {
+        const createdGreenhouseId = await greenhouseModel.create(greenhouse);
+        return createdGreenhouseId;
+    }
+
+    async getGreenhouses(filters={}) {
+        // const query = tags && { tags: { $in: tags } };
+        const greenhouses = await greenhouseModel.getAll(filters);
+        return greenhouses || [];
+    };
+
+    async getGreenhouse({ greenhouseId }) {
+        const greenhouse = await greenhouseModel.get(greenhouseId);
+        return greenhouse || {};
+    };
+
+    async updateGreenhouse({ greenhouseId, greenhouse } = {}) {
+        const updatedGreenhouseId = await greenhouseModel.update(
+            greenhouseId,
+            greenhouse
+        );
+        return updatedGreenhouseId;
+    }
+
+    async deleteGreenhouse({ greenhouseId }) {
+        const deletedGreenhouseId = await greenhouseModel.delete(greenhouseId);
+        return deletedGreenhouseId;
+    }
 }
 
-exports.getGreenhouse = (req, res) => {
-    console.log(req.params.id);
-    greenhouse.findOne({"_id":ObjectId(req.params.id)}, (err, results) => {
-        console.log(results)
-        res.send(results[0]);
-    });
-}
+module.exports = GreenhouseController;
