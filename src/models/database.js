@@ -8,9 +8,6 @@ const PASSWORD = encodeURIComponent(config.dbPassword);
 
 const MONGO_URI = `mongodb+srv://${USER}:${PASSWORD}@${HOST}.ulcrj.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
 
-// let db;
-// let isConnecting;
-
 class Database {
     collectionName;
     constructor() {
@@ -33,21 +30,6 @@ class Database {
         return Database.connection;
     }
 
-
-
-    // constructor(){
-    //     if(isConnecting) return;
-    //     isConnecting = true
-    //     MongoClient.connect(MONGO_URI, { useUnifiedTopology: true }, (err, client) => {
-    //         if(err){
-    //             console.log('Failed to connect to MongoDB');
-    //             return;
-    //         }
-    //         db = client.db();
-    //         console.log('Successfully connected to MongoDB');
-    //     });
-    // }
-
     useCollection(name) {
         this.collectionName = name;
     }
@@ -62,7 +44,7 @@ class Database {
         .then(result => result.insertedId);
     }
 
-    getAll(filters) {
+    getAll(filters={}) {
         return this.connect()
         .then(db => {
             return db
