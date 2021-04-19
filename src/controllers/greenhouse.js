@@ -6,8 +6,7 @@ class GreenhouseController {
         return createdGreenhouseId;
     }
 
-    async getGreenhouses(filters={}) {
-        // const query = tags && { tags: { $in: tags } };
+    async getGreenhouses(filters) {
         const greenhouses = await greenhouseModel.getAll(filters);
         return greenhouses || [];
     };
