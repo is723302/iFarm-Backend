@@ -10,15 +10,15 @@ const messageAddresseeIdSchema = joi.string().regex(/^[0-9a-fA-F]{24}$/);
 const createMessageSchema = {
     date: messageDateSchema.required(),
     message: messageSchema.required(),
-    sender: messageSenderIdSchema.required(),
-    addresse: messageAddresseeIdSchema.required()
+    sender_id: messageSenderIdSchema.required(),
+    addressee_id: messageAddresseeIdSchema.required()
 };
 
 const updateMessageSchema = {
     date: messageDateSchema,
     message: messageSchema,
-    sender: messageSenderIdSchema,
-    addresse: messageAddresseeIdSchema
+    sender_id: messageSenderIdSchema,
+    addressee_id: messageAddresseeIdSchema
 };
 
 module.exports = {
