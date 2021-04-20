@@ -7,7 +7,8 @@ const config = {
     dbUser: process.env.DB_USER,
     dbHost: process.env.DB_HOST,
     dbName: process.env.DB_NAME,
-    dbPassword: process.env.DB_PASSWORD
+    dbPassword: process.env.DB_PASSWORD,
+    corsOrigin: process.env.CORS_ORIGIN,
 }
 
 module.exports = { config };

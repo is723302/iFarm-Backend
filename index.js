@@ -8,6 +8,7 @@ const {
     wrapErrors,
     errorHandler 
 } = require('./src/utils/middleware/errorHandlers')
+const corsHandler = require('./src/utils/middleware/corsHandler');
 const notFoundHandler = require('./src/utils/middleware/notFoundHandler');
 
 app.use(express.urlencoded({extended: false}));
@@ -15,6 +16,9 @@ app.use('/api/assets', express.static(path.join(__dirname, './public')));
 
 // body parser
 app.use(express.json());
+
+// CORS
+app.use(corsHandler());
 
 // routes
 iFarmApi(app);
