@@ -1,8 +1,20 @@
 const userModel = require("../models/user");
+const bcrypt = require('bcrypt');
+const greenhouse = require("../models/greenhouse");
 
 class UserController {
     async createUser({ user }) {
-        const createdUserId = await userModel.create(user);
+        const { name, email, password, role } = user;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const createdUserId = await userModel.create({
+            email,
+            name,
+            password: hashedPassword,
+            role: role,
+            google_id: "",
+            profile_pic: "/public/images/profilePics/generic.jpg",
+            greenhouses_id: []
+        });
         return createdUserId;
     }
 
@@ -13,6 +25,11 @@ class UserController {
 
     async getUser({ userId }) {
         const user = await userModel.get(userId);
+        return user || {};
+    };
+
+    async getUserByEmail({ email }) {
+        const [ user ] = await userModel.getAll({ email });
         return user || {};
     };
 
