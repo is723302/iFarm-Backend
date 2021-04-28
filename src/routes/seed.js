@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
+require('./../utils/auth/strategies/jwt');
 const SeedController = require("../controllers/seed");
 const {
     seedIdSchema,
@@ -15,6 +17,7 @@ function seedApi(app) {
 
     router.post(
         '/',
+        passport.authenticate('jwt', { session: false }),
         validationHandler(createSeedSchema),
         async function (req, res, next) {
             const { body: seed } = req;
@@ -32,6 +35,7 @@ function seedApi(app) {
 
     router.get(
         '/',
+        passport.authenticate('jwt', { session: false }),
         async function (req, res, next) {
             try {
                 const seeds = await seedController.getSeeds(req.query);
@@ -47,6 +51,7 @@ function seedApi(app) {
 
     router.get(
         '/:seedId',
+        passport.authenticate('jwt', { session: false }),
         validationHandler({ seedId: seedIdSchema }, 'params'),
         async function (req, res, next) {
             const { seedId } = req.params;
@@ -64,6 +69,7 @@ function seedApi(app) {
 
     router.put(
         '/:seedId',
+        passport.authenticate('jwt', { session: false }),
         validationHandler({ seedId: seedIdSchema }, 'params'),
         validationHandler(updateSeedSchema),
         async function (req, res, next) {
@@ -86,6 +92,7 @@ function seedApi(app) {
 
     router.delete(
         '/:seedId',
+        passport.authenticate('jwt', { session: false }),
         validationHandler({ seedId: seedIdSchema }, 'params'),
         async function (req, res, next) {
             const { seedId } = req.params;

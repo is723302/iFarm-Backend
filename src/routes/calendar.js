@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
+require('./../utils/auth/strategies/jwt');
 const CalendarController = require("../controllers/calendar");
 const {
     dateIdSchema,
@@ -32,6 +34,7 @@ function calendarApi(app) {
 
     router.get(
         '/',
+        passport.authenticate('jwt', { session: false }),
         async function (req, res, next) {
             try {
                 const dates = await calendarController.getDates(req.query);
@@ -47,6 +50,7 @@ function calendarApi(app) {
 
     router.get(
         '/:dateId',
+        passport.authenticate('jwt', { session: false }),
         validationHandler({ dateId: dateIdSchema }, 'params'),
         async function (req, res, next) {
             const { dateId } = req.params;
@@ -64,6 +68,7 @@ function calendarApi(app) {
 
     router.put(
         '/:dateId',
+        passport.authenticate('jwt', { session: false }),
         validationHandler({ dateId: dateIdSchema }, 'params'),
         validationHandler(updateDateSchema),
         async function (req, res, next) {
@@ -86,6 +91,7 @@ function calendarApi(app) {
 
     router.delete(
         '/:dateId',
+        passport.authenticate('jwt', { session: false }),
         validationHandler({ dateId: dateIdSchema }, 'params'),
         async function (req, res, next) {
             const { dateId } = req.params;

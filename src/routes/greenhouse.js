@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
+require('./../utils/auth/strategies/jwt');
 const GreenhouseController = require("../controllers/greenhouse");
 const {
     greenhouseIdSchema,
@@ -7,6 +9,8 @@ const {
     updateGreenhouseSchema
 } = require('./../utils/schemas/greenhouse');
 const validationHandler = require('./../utils/middleware/validationHandler');
+const scopesValidationHandler = require('./../utils/middleware/scopesValidationHandler');
+
 
 function greenhouseApi(app) {
     app.use('/api/greenhouses', router);
@@ -15,6 +19,8 @@ function greenhouseApi(app) {
 
     router.post(
         '/',
+        passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['create:greenhouse']),
         validationHandler(createGreenhouseSchema),
         async function (req, res, next) {
             const { body: greenhouse } = req;
@@ -31,9 +37,10 @@ function greenhouseApi(app) {
     );
 
     router.get(
-        '/',
+        '/', 
+        passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['read:greenhouse']),
         async function (req, res, next) {
-            // const { name } = req.query;
             console.log(JSON.stringify(req.query));
             try {
                 const greenhouses = await greenhouseController.getGreenhouses(req.query);
@@ -49,6 +56,8 @@ function greenhouseApi(app) {
 
     router.get(
         '/:greenhouseId',
+        passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['read:greenhouse']),
         validationHandler({ greenhouseId: greenhouseIdSchema }, 'params'),
         async function (req, res, next) {
             const { greenhouseId } = req.params;
@@ -66,6 +75,8 @@ function greenhouseApi(app) {
 
     router.put(
         '/:greenhouseId',
+        passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['update:greenhouse']),
         validationHandler({ greenhouseId: greenhouseIdSchema }, 'params'),
         validationHandler(updateGreenhouseSchema),
         async function (req, res, next) {
@@ -88,6 +99,8 @@ function greenhouseApi(app) {
 
     router.delete(
         '/:greenhouseId',
+        passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['delete:greenhouse']),
         validationHandler({ greenhouseId: greenhouseIdSchema }, 'params'),
         async function (req, res, next) {
             const { greenhouseId } = req.params;

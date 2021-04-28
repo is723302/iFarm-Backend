@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
+require('./../utils/auth/strategies/jwt');
 const UserController = require("../controllers/user");
 const {
     userIdSchema,
@@ -15,6 +17,7 @@ function userApi(app) {
 
     router.post(
         '/',
+        passport.authenticate('jwt', { session: false }),
         validationHandler(createUserSchema),
         async function (req, res, next) {
             const { body: user } = req;
@@ -32,6 +35,7 @@ function userApi(app) {
 
     router.get(
         '/',
+        passport.authenticate('jwt', { session: false }),
         async function (req, res, next) {
             try {
                 const users = await userController.getUsers(req.query);
@@ -47,6 +51,7 @@ function userApi(app) {
 
     router.get(
         '/:userId',
+        passport.authenticate('jwt', { session: false }),
         validationHandler({ userId: userIdSchema }, 'params'),
         async function (req, res, next) {
             const { userId } = req.params;
@@ -64,6 +69,7 @@ function userApi(app) {
 
     router.put(
         '/:userId',
+        passport.authenticate('jwt', { session: false }),
         validationHandler({ userId: userIdSchema }, 'params'),
         validationHandler(updateUserSchema),
         async function (req, res, next) {
@@ -86,6 +92,7 @@ function userApi(app) {
 
     router.delete(
         '/:userId',
+        passport.authenticate('jwt', { session: false }),
         validationHandler({ userId: userIdSchema }, 'params'),
         async function (req, res, next) {
             const { userId } = req.params;
