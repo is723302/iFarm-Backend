@@ -1,8 +1,8 @@
 const apiKeysModel = require("../models/apiKeys");
 
 class ApiKeysController {
-    async getApiKey({ token }) {
-        const [apikey] = await apiKeysModel.getAll({token});
+    async getApiKey({ scope }) {
+        const [apikey] = await apiKeysModel.getAll({scope});
         return apikey
     }
 }
