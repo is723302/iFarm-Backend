@@ -19,12 +19,6 @@ function authApi(app) {
     const apiKeysController = new ApiKeysController();
 
     router.post('/sign-in', async function (req, res, next) {
-        // const { apiKeyToken } = req.body;
-
-        // if (!apiKeyToken) {
-        //     next(boom.unauthorized('apiKeyToken is required'));
-        // }
-
         passport.authenticate('basic', function (error, user) {
             try {
                 if (error || !user) {

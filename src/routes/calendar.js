@@ -9,6 +9,7 @@ const {
     updateDateSchema
 } = require('./../utils/schemas/calendar');
 const validationHandler = require('./../utils/middleware/validationHandler');
+const scopesValidationHandler = require('./../utils/middleware/scopesValidationHandler');
 
 function calendarApi(app) {
     app.use('/api/calendar', router);
@@ -17,6 +18,8 @@ function calendarApi(app) {
 
     router.post(
         '/',
+        passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['create:calendar']),
         validationHandler(createDateSchema),
         async function (req, res, next) {
             const { body: date } = req;
@@ -35,6 +38,7 @@ function calendarApi(app) {
     router.get(
         '/',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['read:calendar']),
         async function (req, res, next) {
             try {
                 const dates = await calendarController.getDates(req.query);
@@ -51,6 +55,7 @@ function calendarApi(app) {
     router.get(
         '/:dateId',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['read:calendar']),
         validationHandler({ dateId: dateIdSchema }, 'params'),
         async function (req, res, next) {
             const { dateId } = req.params;
@@ -69,6 +74,7 @@ function calendarApi(app) {
     router.put(
         '/:dateId',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['update:calendar']),
         validationHandler({ dateId: dateIdSchema }, 'params'),
         validationHandler(updateDateSchema),
         async function (req, res, next) {
@@ -92,6 +98,7 @@ function calendarApi(app) {
     router.delete(
         '/:dateId',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['delete:calendar']),
         validationHandler({ dateId: dateIdSchema }, 'params'),
         async function (req, res, next) {
             const { dateId } = req.params;

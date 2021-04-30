@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
+require('./../utils/auth/strategies/jwt');
 const MessageController = require("../controllers/message");
 const {
     messageIdSchema,
@@ -7,6 +9,7 @@ const {
     updateMessageSchema
 } = require('./../utils/schemas/message');
 const validationHandler = require('./../utils/middleware/validationHandler');
+const scopesValidationHandler = require('./../utils/middleware/scopesValidationHandler');
 
 function messageApi(app) {
     app.use('/api/messages', router);
@@ -15,6 +18,8 @@ function messageApi(app) {
 
     router.post(
         '/',
+        passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['create:message']),
         validationHandler(createMessageSchema),
         async function (req, res, next) {
             const { body: message } = req;
@@ -32,6 +37,8 @@ function messageApi(app) {
 
     router.get(
         '/',
+        passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['read:message']),
         async function (req, res, next) {
             try {
                 const messages = await messageController.getMessages(req.query);
@@ -47,6 +54,8 @@ function messageApi(app) {
 
     router.get(
         '/:messageId',
+        passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['read:message']),
         validationHandler({ messageId: messageIdSchema }, 'params'),
         async function (req, res, next) {
             const { messageId } = req.params;
@@ -64,6 +73,8 @@ function messageApi(app) {
 
     router.put(
         '/:messageId',
+        passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['update:message']),
         validationHandler({ messageId: messageIdSchema }, 'params'),
         validationHandler(updateMessageSchema),
         async function (req, res, next) {
@@ -86,6 +97,8 @@ function messageApi(app) {
 
     router.delete(
         '/:messageId',
+        passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['delete:message']),
         validationHandler({ messageId: messageIdSchema }, 'params'),
         async function (req, res, next) {
             const { messageId } = req.params;

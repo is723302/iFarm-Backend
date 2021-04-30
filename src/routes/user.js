@@ -9,6 +9,7 @@ const {
     updateUserSchema
 } = require('./../utils/schemas/user');
 const validationHandler = require('./../utils/middleware/validationHandler');
+const scopesValidationHandler = require('./../utils/middleware/scopesValidationHandler');
 
 function userApi(app) {
     app.use('/api/users', router);
@@ -18,6 +19,7 @@ function userApi(app) {
     router.post(
         '/',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['create:user']),
         validationHandler(createUserSchema),
         async function (req, res, next) {
             const { body: user } = req;
@@ -36,6 +38,7 @@ function userApi(app) {
     router.get(
         '/',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['read:user']),
         async function (req, res, next) {
             try {
                 const users = await userController.getUsers(req.query);
@@ -52,6 +55,7 @@ function userApi(app) {
     router.get(
         '/:userId',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['read:user']),
         validationHandler({ userId: userIdSchema }, 'params'),
         async function (req, res, next) {
             const { userId } = req.params;
@@ -70,6 +74,7 @@ function userApi(app) {
     router.put(
         '/:userId',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['update:user']),
         validationHandler({ userId: userIdSchema }, 'params'),
         validationHandler(updateUserSchema),
         async function (req, res, next) {
@@ -93,6 +98,7 @@ function userApi(app) {
     router.delete(
         '/:userId',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['delete:user']),
         validationHandler({ userId: userIdSchema }, 'params'),
         async function (req, res, next) {
             const { userId } = req.params;

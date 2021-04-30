@@ -9,6 +9,7 @@ const {
     updateSeedSchema
 } = require('./../utils/schemas/seed');
 const validationHandler = require('./../utils/middleware/validationHandler');
+const scopesValidationHandler = require('./../utils/middleware/scopesValidationHandler');
 
 function seedApi(app) {
     app.use('/api/seeds', router);
@@ -18,6 +19,7 @@ function seedApi(app) {
     router.post(
         '/',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['create:seed']),
         validationHandler(createSeedSchema),
         async function (req, res, next) {
             const { body: seed } = req;
@@ -36,6 +38,7 @@ function seedApi(app) {
     router.get(
         '/',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['read:seed']),
         async function (req, res, next) {
             try {
                 const seeds = await seedController.getSeeds(req.query);
@@ -52,6 +55,7 @@ function seedApi(app) {
     router.get(
         '/:seedId',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['read:seed']),
         validationHandler({ seedId: seedIdSchema }, 'params'),
         async function (req, res, next) {
             const { seedId } = req.params;
@@ -70,6 +74,7 @@ function seedApi(app) {
     router.put(
         '/:seedId',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['update:seed']),
         validationHandler({ seedId: seedIdSchema }, 'params'),
         validationHandler(updateSeedSchema),
         async function (req, res, next) {
@@ -93,6 +98,7 @@ function seedApi(app) {
     router.delete(
         '/:seedId',
         passport.authenticate('jwt', { session: false }),
+        scopesValidationHandler(['delete:seed']),
         validationHandler({ seedId: seedIdSchema }, 'params'),
         async function (req, res, next) {
             const { seedId } = req.params;
