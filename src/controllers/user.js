@@ -1,6 +1,5 @@
 const userModel = require("../models/user");
 const bcrypt = require('bcrypt');
-const greenhouse = require("../models/greenhouse");
 
 class UserController {
     async createUser({ user }) {
