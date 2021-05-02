@@ -5,6 +5,8 @@ const calendarRouter = require('./calendar');
 const employeeRouter = require('./employee');
 const supervisorRouter = require('./supervisor');
 const greenhouseRouter = require('./greenhouse');
+const loginRouter = require('./login');
+const liveChatRouter = require('./livechat');
 
 module.exports = {
     homePageRouter,
@@ -13,5 +15,7 @@ module.exports = {
     calendarRouter,
     employeeRouter,
     supervisorRouter,
-    greenhouseRouter
+    greenhouseRouter,
+    loginRouter,
+    liveChatRouter
 }

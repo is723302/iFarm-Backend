@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const {config} = require('./config');
+const passport = require('passport');
 const {
     homePageRouter,
     seedRouter,
@@ -9,8 +10,14 @@ const {
     calendarRouter,
     employeeRouter,
     supervisorRouter,
-    greenhouseRouter
+    greenhouseRouter,
+    loginRouter,
+    liveChatRouter
+
 } = require('./src/routes');
+
+require('./src/controllers/passport-setup');
+
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
@@ -24,6 +31,8 @@ app.use('/api/calendar', calendarRouter);
 app.use('/api/employees', employeeRouter);
 app.use('/api/supervisors', supervisorRouter);
 app.use('/api/greenhouses', greenhouseRouter);
+app.use('/api/login', loginRouter);
+app.use('/api/livechat', liveChatRouter);
 
 app.listen(config.port, config.host, function() {
     console.log(`Listening on port ${config.port} and host ${config.host}`);
