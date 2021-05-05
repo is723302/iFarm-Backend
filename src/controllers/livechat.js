@@ -1,7 +1,19 @@
-var io = require('socket.io')(server);
+const cors = require('cors');
+const { Server } = require('mongodb');
+
+var io = require('socket.io')(4200);
 var name;
 
-io.on('connection', (socket) => {
+const sIo = io(server, {
+    cors:{
+        origin: 'https://localhost:4200',
+        methods: ['GET', 'POST'],
+        allowHeaders: ['Authorization'],
+        credentials: true
+    }
+});
+
+sIo.on('connection', socket => {
   console.log('new user connected');
   
   socket.on('joining msg', (username) => {
