@@ -8,6 +8,7 @@ const greenhouseRedLightSchema = joi.number();
 const greenhouseBlueLightSchema = joi.number();
 const greenhouseHumiditySchema = joi.number();
 const greenhouseTemperatureSchema = joi.number();
+const greenhouseDateSchema = joi.string();
 
 const createGreenhouseSchema = {
     name: greenhouseNameSchema.required(),
@@ -16,6 +17,7 @@ const createGreenhouseSchema = {
     blue_light: greenhouseBlueLightSchema.required(),
     humidity: greenhouseHumiditySchema.required(),
     temperature: greenhouseTemperatureSchema.required(),
+    start_at: greenhouseDateSchema.required(),
     seed_id: seedIdSchema.required()
 };
 
@@ -26,6 +28,7 @@ const updateGreenhouseSchema = {
     blue_light: greenhouseBlueLightSchema,
     humidity: greenhouseHumiditySchema,
     temperature: greenhouseTemperatureSchema,
+    start_at: greenhouseDateSchema,
     seed_id: seedIdSchema
 };
 
