@@ -33,6 +33,11 @@ class UserController {
     };
 
     async updateUser({ userId, user } = {}) {
+        if(user.password) {
+            const { password } = user;
+            const hashedPassword = await bcrypt.hash(password, 10);
+            user.password = hashedPassword;
+        }
         const updatedUserId = await userModel.update(
             userId,
             user
