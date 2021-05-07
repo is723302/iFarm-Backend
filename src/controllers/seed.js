@@ -1,17 +1,33 @@
-const seed = require("../models/seed");
-var ObjectId = require('mongodb').ObjectId;
+const seedModel = require("../models/seed");
 
-exports.getSeeds = (req, res) => {
-    seed.find({}, (err, results) => {
-        console.log(results)
-        res.send(results);
-    });
+class SeedController {
+    async createSeed({ seed }) {
+        const createdSeedId = await seedModel.create(seed);
+        return createdSeedId;
+    }
+
+    async getSeeds(filters) {
+        const seeds = await seedModel.getAll(filters);
+        return seeds || [];
+    };
+
+    async getSeed({ seedId }) {
+        const seed = await seedModel.get(seedId);
+        return seed || {};
+    };
+
+    async updateSeed({ seedId, seed } = {}) {
+        const updatedSeedId = await seedModel.update(
+            seedId,
+            seed
+        );
+        return updatedSeedId;
+    }
+
+    async deleteSeed({ seedId }) {
+        const deletedSeedId = await seedModel.delete(seedId);
+        return deletedSeedId;
+    }
 }
 
-exports.getSeed = (req, res) => {
-    console.log(req.params.id);
-    seed.findOne({"_id":ObjectId(req.params.id)}, (err, results) => {
-        console.log(results)
-        res.send(results[0]);
-    });
-}
+module.exports = SeedController;

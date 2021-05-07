@@ -1,45 +1,86 @@
-const {config} = require('../../config');
-const MongoClient = require('mongodb').MongoClient;
+const { config } = require('../../config');
+const { MongoClient, ObjectId } = require('mongodb');
 
-let db;
-let isConnecting;
+const USER = encodeURIComponent(config.dbUser);
+const HOST = encodeURIComponent(config.dbHost);
+const DB_NAME = encodeURIComponent(config.dbName);
+const PASSWORD = encodeURIComponent(config.dbPassword);
+
+const MONGO_URI = `mongodb+srv://${USER}:${PASSWORD}@${HOST}.ulcrj.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
 
 class Database {
     collectionName;
     constructor() {
-        if(isConnecting) return;
-        isConnecting = true
-        MongoClient.connect(config.mongoUrl, { useUnifiedTopology: true }, (err, client) => {
-            if(err){
-                console.log('Failed to connect to MongoDB');
-                return;
-            }
-            db = client.db();
-            console.log('Successfully connected to MongoDB');
-        });
+        this.client = new MongoClient(MONGO_URI, { useUnifiedTopology: true });
+        this.dbName = DB_NAME;
     }
 
-    useCollection(name){
+    connect() {
+        if (!Database.connection) {
+            Database.connection = new Promise((resolve, reject) => {
+                this.client.connect(err => {
+                    if (err) {
+                        reject(err);
+                    }
+                    console.log('Succesfully connected to mongo');
+                    resolve(this.client.db(this.dbName));
+                });
+            });
+        }
+        return Database.connection;
+    }
+
+    useCollection(name) {
         this.collectionName = name;
     }
 
-    find(filters, cb){
-        const collection = db.collection(this.collectionName);
-        return collection.find(filters).toArray(cb);
+    create(data) {
+        return this.connect()
+        .then(db => {
+          return db
+          .collection(this.collectionName)
+          .insertOne(data);
+        })
+        .then(result => result.insertedId);
     }
 
-    findOne(id, cb){
-        const collection = db.collection(this.collectionName);
-        return collection.find(id).toArray(cb);
-    }
-
-    insert(object){
-        const collection = db.collection(this.collectionName);
-        return collection.insertOne(object).then((result) => {
-            console.log("Object inserted successfully");
-        }).catch(err => {
-            console.log("Failed to insert the object", err);
+    getAll(filters={}) {
+        return this.connect()
+        .then(db => {
+            return db
+            .collection(this.collectionName)
+            .find(filters)
+            .toArray();
         });
+    }
+
+    get(id) {
+        return this.connect()
+        .then(db => {
+            return db
+            .collection(this.collectionName)
+            .findOne({ _id: ObjectId(id) });
+        });
+    }
+
+    update(id, data) {
+        return this.connect()
+        .then(db => {
+            return db
+            .collection(this.collectionName)
+            .updateOne({ _id: ObjectId(id) }, { $set: data }, { upsert: true });
+        })
+        .then(result => result.upsertedId || id);
+    }
+
+    delete(id) {
+        return this.connect()
+        .then(db => {
+          return db
+          .collection(this.collectionName)
+          .deleteOne({ _id: ObjectId(id) });
+        })
+        .then(() => id);
     }
 }
 

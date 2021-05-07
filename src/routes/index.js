@@ -1,21 +1,20 @@
-const homePageRouter = require('./home_page');
-const seedRouter = require('./seed');
-const messageRouter = require('./message');
-const calendarRouter = require('./calendar');
-const employeeRouter = require('./employee');
-const supervisorRouter = require('./supervisor');
-const greenhouseRouter = require('./greenhouse');
-const loginRouter = require('./login');
-const liveChatRouter = require('./livechat');
+const express = require("express");
+const router = express.Router();
 
-module.exports = {
-    homePageRouter,
-    seedRouter,
-    messageRouter,
-    calendarRouter,
-    employeeRouter,
-    supervisorRouter,
-    greenhouseRouter,
-    loginRouter,
-    liveChatRouter
+const authApi = require('./auth');
+const seedApi = require('./seed');
+const userApi = require('./user');
+const messageApi = require('./message');
+const calendarApi = require('./calendar');
+const greenhouseApi = require('./greenhouse');
+
+function iFarmApi(app) {
+    authApi(app)
+    seedApi(app);
+    userApi(app);
+    messageApi(app);
+    calendarApi(app);
+    greenhouseApi(app);
 }
+
+module.exports = iFarmApi;
