@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const boom = require('@hapi/boom');
 const passport = require('passport');
 const { BasicStrategy } = require('passport-http');
