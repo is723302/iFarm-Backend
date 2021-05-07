@@ -11,7 +11,7 @@ const {
 const corsHandler = require('./src/utils/middleware/corsHandler');
 const notFoundHandler = require('./src/utils/middleware/notFoundHandler');
 
-require('./src/controllers/passport-setup');
+require('./src/utils/auth/strategies/passport-setup');
 
 
 app.use(express.urlencoded({extended: false}));
