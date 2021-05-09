@@ -7,11 +7,13 @@ class UserController {
         const hashedPassword = await bcrypt.hash(password, 10);
         user.password = hashedPassword;
         user.profile_pic = "https://ifarm-app-images.s3.amazonaws.com/images/profilePics/generic.jpg"
-        user.greenhouses_id = []
         if(!user.google_id) {
             user.google_id = "";
         }
-        const createdUserId = await userModel.create({ user });
+        if(!user.greenhouses_id){
+            user.greenhouses_id = []
+        }
+        const createdUserId = await userModel.create(user);
         return createdUserId;
     }
 
