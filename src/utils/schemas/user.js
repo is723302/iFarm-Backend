@@ -13,7 +13,7 @@ const greenhousesIdSchema = joi.array();
 const createUserSchema = {
     email: userEmailSchema.required(),
     name: userNameSchema.required(),
-    password: userPasswordSchema.required(),
+    password: userPasswordSchema,
     role: userRoleSchema.required(),
     google_id: userGoogleIdSchema,
     profile_pic: userProfilePicSchema,
