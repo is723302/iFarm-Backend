@@ -10,10 +10,10 @@ const userProfilePicSchema = joi.string();
 const supervisorIdSchema = joi.string().regex(/^[0-9a-fA-F]{24}$/);
 const greenhousesIdSchema = joi.array();
 
-const createUserSchema = {
+const UserSchema = {
     email: userEmailSchema.required(),
     name: userNameSchema.required(),
-    password: userPasswordSchema.required(),
+    password: userPasswordSchema,
     role: userRoleSchema.required(),
     google_id: userGoogleIdSchema,
     profile_pic: userProfilePicSchema,
@@ -21,6 +21,17 @@ const createUserSchema = {
     greenhouses_id: greenhousesIdSchema,
 };
 
+
+const createUserSchema = {
+    ...UserSchema,
+    role: joi.string()
+
+};
+
+const createProviderUserSchema = {
+    ...UserSchema,
+    apiKeyToken: joi.string().required()
+};
 const updateUserSchema = {
     email: userEmailSchema,
     name: userNameSchema,
@@ -35,6 +46,7 @@ const updateUserSchema = {
 module.exports = {
     userIdSchema,
     createUserSchema,
-    updateUserSchema
+    updateUserSchema,
+    createProviderUserSchema
 };
 

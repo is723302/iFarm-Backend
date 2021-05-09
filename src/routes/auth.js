@@ -6,7 +6,7 @@ const passport = require('passport');
 const { config } = require('./../../config');
 const UserController = require('./../controllers/user');
 const ApiKeysController = require('./../controllers/apiKeys');
-const { createUserSchema } = require('./../utils/schemas/user');
+const { createUserSchema, createProviderUserSchema } = require('./../utils/schemas/user');
 const validationHandler = require('./../utils/middleware/validationHandler');
 
 //Basic strategy
@@ -68,6 +68,50 @@ function authApi(app) {
             }
         }
     );
+
+    router.post('/sign-provider', validationHandler(createProviderUserSchema), 
+    async function(req, res, next){
+        const {body} = req;
+        const userController = new UserController();
+        const apiKeysController = new ApiKeysController();
+        console.log(body);
+        const {apiKeyToken, ...user} = body;
+
+        if(!apiKeyToken){
+            next(boom.unauthorized('apiKey is required'));
+        }
+
+        console.log(apiKeyToken);
+        try {
+            console.log("this is user: " ,user);
+            const queriedUser = await userController.getOrCreateUser(user);
+            const { role } = queriedUser[0];
+            const apiKey = await apiKeysController.getApiKey({ scope: role });
+
+            console.log(queriedUser, apiKey);
+
+
+            if(!apiKey){
+                next(boom.unauthorized());
+            }
+
+            const{_id: id, name, email} = queriedUser[0];
+
+            const payload = {
+                sub: id, 
+                name, 
+                email,
+                scopes: apiKey.scopes
+            }
+
+            const token = jwt.sign(payload, config.authJwtSecret, {
+                expiresIn: '30m'
+            });
+            return res.status(200).json({token, user:{id, name, email}});
+        } catch (error) {
+            next(error)
+        }
+    })
 }
 
 module.exports = authApi
