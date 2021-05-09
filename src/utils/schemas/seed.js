@@ -20,11 +20,9 @@ const createSeedSchema = {
     max_blue_light: seedLightSchema.required(),
     min_humidity: seedHumiditySchema.required(),
     max_humidity: seedHumiditySchema.required(),
-    min_morning_temperature: seedTemperatureSchema.required(),
-    max_morning_temperature: seedTemperatureSchema.required(),
-    min_night_temperature: seedTemperatureSchema.required(),
-    max_night_temperature: seedTemperatureSchema.required(),
-    image: seedImageSchema.required()
+    min_temperature: seedTemperatureSchema.required(),
+    max_temperature: seedTemperatureSchema.required(),
+    image: seedImageSchema
 };
 
 const updateSeedSchema = {
