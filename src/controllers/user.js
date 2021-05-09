@@ -3,17 +3,15 @@ const bcrypt = require('bcryptjs');
 
 class UserController {
     async createUser({ user }) {
-        const { name, email, password, role } = user;
+        const { password } = user;
         const hashedPassword = await bcrypt.hash(password, 10);
-        const createdUserId = await userModel.create({
-            email,
-            name,
-            password: hashedPassword,
-            role: role,
-            google_id: "",
-            profile_pic: "/public/images/profilePics/generic.jpg",
-            greenhouses_id: []
-        });
+        user.password = hashedPassword;
+        user.profile_pic = "https://ifarm-app-images.s3.amazonaws.com/images/profilePics/generic.jpg"
+        user.greenhouses_id = []
+        if(!user.google_id) {
+            user.google_id = "";
+        }
+        const createdUserId = await userModel.create({ user });
         return createdUserId;
     }
 
